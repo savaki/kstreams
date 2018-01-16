@@ -28,3 +28,7 @@ that will be required is a running Kafka cluster and Go 1.7+
 ```bash
 go get -u github.com/savaki/kstreams
 ``` 
+
+## Status
+
+under heavy construction

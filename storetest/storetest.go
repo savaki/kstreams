@@ -189,7 +189,15 @@ func TestStore(t *testing.T, store kstreams.KeyValueStore) {
 	})
 
 	t.Run("implements StateStore", func(t *testing.T) {
-		_, ok := store.(kstreams.StateStore)
+		stateStore, ok := store.(kstreams.StateStore)
 		assert.True(t, ok, "expected store to implement kstreams.StateStore")
+
+		t.Run("and name is set", func(t *testing.T) {
+			assert.NotZero(t, stateStore.Name())
+		})
+
+		t.Run("and IsOpen", func(t *testing.T) {
+			assert.True(t, stateStore.IsOpen())
+		})
 	})
 }

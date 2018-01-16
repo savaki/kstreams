@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/savaki/kstreams?status.svg)](https://godoc.org/github.com/savaki/kstreams)
+
 kstreams
 ------
 

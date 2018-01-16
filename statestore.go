@@ -18,7 +18,7 @@ package kstreams
 // StateStore provides a storage engine for managing state maintained by a stream processor.
 //
 // If the store is implemented as a persistent store:
-//	* it MUST use the store name as directory name and write all data into this store directory
+//  * it MUST use the store name as directory name and write all data into this store directory
 //  * it MUST create the store directory with the state directory
 //  * it MAY obtain the state directory via ProcessorContext.StateDir()
 //

@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/savaki/kstreams.svg?branch=master)](https://travis-ci.org/savaki/kstreams)
 [![GoDoc](https://godoc.org/github.com/savaki/kstreams?status.svg)](https://godoc.org/github.com/savaki/kstreams)
 
 kstreams

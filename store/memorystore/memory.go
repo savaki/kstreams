@@ -13,11 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package kstreams
+package memorystore
 
 import (
 	"sort"
 	"sync"
+
+	"github.com/savaki/kstreams"
 )
 
 // MemoryStore provides an in memory implementation of a KeyValueStore
@@ -59,7 +61,7 @@ func (s *MemoryStore) ApproximateNumEntries() (int64, error) {
 }
 
 // Delete the value from the store
-func (s *MemoryStore) Delete(key Encoder) ([]byte, error) {
+func (s *MemoryStore) Delete(key kstreams.Encoder) ([]byte, error) {
 	v, err := key.Encode()
 	if err != nil {
 		return nil, err
@@ -70,12 +72,12 @@ func (s *MemoryStore) Delete(key Encoder) ([]byte, error) {
 	defer s.mutex.Unlock()
 
 	if s.content == nil {
-		return nil, ErrKeyNotFound
+		return nil, kstreams.ErrKeyNotFound
 	}
 
 	value, ok := s.content[k]
 	if !ok {
-		return nil, ErrKeyNotFound
+		return nil, kstreams.ErrKeyNotFound
 	}
 
 	delete(s.content, k)
@@ -90,7 +92,7 @@ func (s *MemoryStore) Delete(key Encoder) ([]byte, error) {
 }
 
 // Get the value corresponding to the specified key
-func (s *MemoryStore) Get(key Encoder) ([]byte, error) {
+func (s *MemoryStore) Get(key kstreams.Encoder) ([]byte, error) {
 	k, err := key.Encode()
 	if err != nil {
 		return nil, err
@@ -100,12 +102,12 @@ func (s *MemoryStore) Get(key Encoder) ([]byte, error) {
 	defer s.mutex.Unlock()
 
 	if s.content == nil {
-		return nil, ErrKeyNotFound
+		return nil, kstreams.ErrKeyNotFound
 	}
 
 	v, ok := s.content[string(k)]
 	if !ok {
-		return nil, ErrKeyNotFound
+		return nil, kstreams.ErrKeyNotFound
 	}
 
 	return v, nil
@@ -127,7 +129,7 @@ func (s *MemoryStore) put(key string, value []byte) {
 }
 
 // Put updates the provided key value pair
-func (s *MemoryStore) Put(key, value Encoder) error {
+func (s *MemoryStore) Put(key, value kstreams.Encoder) error {
 	k, err := key.Encode()
 	if err != nil {
 		return err
@@ -147,7 +149,7 @@ func (s *MemoryStore) Put(key, value Encoder) error {
 }
 
 // PutAll updates all the given key value pairs
-func (s *MemoryStore) PutAll(kvs ...KeyValue) error {
+func (s *MemoryStore) PutAll(kvs ...kstreams.KeyValue) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
@@ -170,7 +172,7 @@ func (s *MemoryStore) PutAll(kvs ...KeyValue) error {
 
 // PutIfAbsent updates the values associated with this key unless a
 // value is already associated with the key
-func (s *MemoryStore) PutIfAbsent(key, value Encoder) error {
+func (s *MemoryStore) PutIfAbsent(key, value kstreams.Encoder) error {
 	k, err := key.Encode()
 	if err != nil {
 		return err
@@ -197,7 +199,7 @@ func (s *MemoryStore) PutIfAbsent(key, value Encoder) error {
 // null values.
 //
 // No ordering guarantees are provided.
-func (s *MemoryStore) Range(from, to Encoder, callback func(key, value []byte) error) error {
+func (s *MemoryStore) Range(from, to kstreams.Encoder, callback func(key, value []byte) error) error {
 	f, err := from.Encode()
 	if err != nil {
 		return err
@@ -253,7 +255,7 @@ func (s *MemoryStore) Close() error {
 }
 
 // NewMemoryStore returns a new in memory key value store with the specified name
-func NewMemoryStore(name string) *MemoryStore {
+func New(name string) *MemoryStore {
 	return &MemoryStore{
 		name: name,
 	}

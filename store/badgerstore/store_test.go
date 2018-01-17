@@ -27,6 +27,7 @@ import (
 func TestStore(t *testing.T) {
 	t.Parallel()
 
+	assert.Nil(t, os.MkdirAll("testdata", 0755))
 	dir, err := ioutil.TempDir("testdata", "junk")
 	assert.Nil(t, err)
 	defer os.RemoveAll(dir)

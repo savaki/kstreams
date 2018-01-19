@@ -25,7 +25,7 @@ type Error struct {
 	message string
 }
 
-// Error satisifies the error interface
+// Error satisfies the error interface
 func (e Error) Error() string {
 	return e.message
 }

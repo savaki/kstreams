@@ -1,6 +1,7 @@
 package kstreams
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/pkg/errors"
@@ -37,16 +38,14 @@ type Topology struct {
 	nodeFactories    []nodeFactory
 }
 
-func (t *Topology) verifyTopicNotAlreadyRegistered(topic string) error {
+func (t *Topology) verifyTopicNotAlreadyRegistered(topic string) {
 	// validate
 	if _, ok := t.sourceTopicNames[topic]; ok {
-		return errors.Errorf("topic, %v, already registered by another source", topic)
+		panic(fmt.Errorf("topic, %v, already registered by another source", topic))
 	}
 	if _, ok := t.globalTopicNames[topic]; ok {
-		return errors.Errorf("topic, %v, already registered by another source", topic)
+		panic(fmt.Errorf("topic, %v, already registered by another source", topic))
 	}
-
-	return nil
 }
 
 func (t *Topology) nodeFactoryContains(name string) bool {
@@ -61,12 +60,9 @@ func (t *Topology) nodeFactoryContains(name string) bool {
 
 func (t *Topology) AddSource(name string, topics ...string) error {
 	// validate
-	if name == "" {
-		return errors.Errorf("name must not be blank")
-	}
-	if len(topics) == 0 {
-		return errors.Errorf("you must provide at least one topic")
-	}
+	requireString(name, "name MUST NOT be blank")
+	requireStringArray(topics, "topic MUST NOT be blank")
+
 	if exists := t.nodeFactoryContains(name); exists {
 		return errors.Errorf("processor, %v, is already added", name)
 	}
@@ -84,4 +80,12 @@ func (t *Topology) AddSource(name string, topics ...string) error {
 	}
 
 	return errors.New("not implemented")
+}
+
+func (t *Topology) AddSink(name string, topics ...string) error {
+	return nil
+}
+
+func NewTopology() *Topology {
+	return &Topology{}
 }

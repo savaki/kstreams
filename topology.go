@@ -59,6 +59,10 @@ func (t *Topology) nodeFactoryContains(name string) bool {
 	return false
 }
 
+func (t *Topology) AddGlobalStore(name, topic string, supplier KeyValueBytesStoreSupplier) error {
+	return nil
+}
+
 func (t *Topology) AddSource(name string, topics ...string) error {
 	// validate
 	if name == "" {

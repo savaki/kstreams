@@ -46,6 +46,9 @@ type StateStore interface {
 
 	// Name of this store
 	Name() string
+
+	// Restore will be called repeatedly until all records
+	Restore(record ...Record) error
 }
 
 // ReadOnlyKeyValueStore represents a key value store that only supports
@@ -95,4 +98,10 @@ type KeyValueStore interface {
 
 	// Delete the value from the store
 	Delete(key Encoder) ([]byte, error)
+}
+
+// KeyValueBytesStoreSupplier is a factory that provides the stream with
+// its KeyValueStore
+type KeyValueBytesStoreSupplier interface {
+	Get() KeyValueStore
 }

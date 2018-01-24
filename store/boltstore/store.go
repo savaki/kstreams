@@ -307,11 +307,11 @@ func (s *Store) ApproximateNumEntries() (int64, error) {
 	return 0, errors.New("ApproximateNumEntries not supported")
 }
 
-// New returns a new badger KeyValueStore that stores data in the specified directory
-func New(name, dir string) (*Store, error) {
-	path, err := filepath.Abs(dir)
+// New returns a new badger KeyValueStore that stores data in the specified filename
+func New(name, filename string) (*Store, error) {
+	path, err := filepath.Abs(filename)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to calculate abs path for %v", dir)
+		return nil, errors.Wrapf(err, "unable to calculate abs path for %v", filename)
 	}
 
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
@@ -320,7 +320,7 @@ func New(name, dir string) (*Store, error) {
 
 	db, err := bolt.Open(path, 0600, nil)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to open bolt db, %v", dir)
+		return nil, errors.Wrapf(err, "unable to open bolt db, %v", filename)
 	}
 
 	return &Store{

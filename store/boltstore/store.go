@@ -104,7 +104,9 @@ func (s *Store) Get(key kstreams.Encoder) ([]byte, error) {
 			return err
 		}
 
-		value = bucket.Get(k)
+		if v := bucket.Get(k); v != nil {
+			value = append(value, v...) // need to make copy as v is only valid within the tx
+		}
 		return nil
 	})
 	if value == nil {

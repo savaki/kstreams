@@ -11,11 +11,11 @@ import (
 
 func TestAbstractObserver(t *testing.T) {
 	observer := AbstractObserver{
-		OnPutFunc: func(key kstreams.Encoder, err error) {
-			fmt.Println("OnPut")
+		OnPutFunc: func(key, value kstreams.Encoder, err error) {
+			fmt.Printf("OnPut(%v, %v) => %v\n", key, value, err)
 		},
-		OnGetFunc: func(kstreams.Encoder, []byte, error) {
-			fmt.Println("OnGet")
+		OnGetFunc: func(key kstreams.Encoder, value []byte, err error) {
+			fmt.Printf("OnGet(%v) => (%v, %v)\n", key, string(value), err)
 		},
 	}
 

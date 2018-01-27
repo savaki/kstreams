@@ -9,7 +9,7 @@ type AbstractObserver struct {
 	OnApproximateNumEntriesFunc func(int64, error)
 	OnGetFunc                   func(kstreams.Encoder, []byte, error)
 	OnRangeFunc                 func(from, to kstreams.Encoder, err error)
-	OnPutFunc                   func(key kstreams.Encoder, err error)
+	OnPutFunc                   func(key, value kstreams.Encoder, err error)
 	OnPutAllFunc                func(kvs ...kstreams.KeyValue)
 	OnPutIfAbsentFunc           func(key, value kstreams.Encoder, err error)
 	OnDeleteFunc                func(key kstreams.Encoder, oldValue []byte, err error)
@@ -38,9 +38,9 @@ func (a AbstractObserver) OnRange(from, to kstreams.Encoder, err error) {
 		a.OnRangeFunc(from, to, err)
 	}
 }
-func (a AbstractObserver) OnPut(key kstreams.Encoder, err error) {
+func (a AbstractObserver) OnPut(key, value kstreams.Encoder, err error) {
 	if a.OnPutFunc != nil {
-		a.OnPutFunc(key, err)
+		a.OnPutFunc(key, value, err)
 	}
 }
 func (a AbstractObserver) OnPutAll(kvs ...kstreams.KeyValue) {
@@ -64,7 +64,7 @@ type Observer interface {
 	OnApproximateNumEntries(int64, error)
 	OnGet(kstreams.Encoder, []byte, error)
 	OnRange(from, to kstreams.Encoder, err error)
-	OnPut(key kstreams.Encoder, err error)
+	OnPut(key, value kstreams.Encoder, err error)
 	OnPutAll(kvs ...kstreams.KeyValue)
 	OnPutIfAbsent(key, value kstreams.Encoder, err error)
 	OnDelete(key kstreams.Encoder, oldValue []byte, err error)
@@ -117,7 +117,7 @@ func (o observableKeyValueStore) Range(from, to kstreams.Encoder, callback func(
 
 // Put updates the provided key value pair
 func (o observableKeyValueStore) Put(key, value kstreams.Encoder) (err error) {
-	defer o.notify(func(o Observer) { o.OnPut(key, err) })
+	defer o.notify(func(o Observer) { o.OnPut(key, value, err) })
 	err = o.store.Put(key, value)
 	return
 }

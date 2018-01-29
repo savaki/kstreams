@@ -1,11 +1,11 @@
-package store
+package kvstore
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/savaki/kstreams"
-	"github.com/savaki/kstreams/store/memorystore"
+	"github.com/savaki/kstreams/kvstore/memorystore"
 	"github.com/tj/assert"
 )
 

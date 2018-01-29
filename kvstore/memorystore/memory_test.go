@@ -18,7 +18,7 @@ package memorystore_test
 import (
 	"testing"
 
-	"github.com/savaki/kstreams/store/memorystore"
+	"github.com/savaki/kstreams/kvstore/memorystore"
 	"github.com/savaki/kstreams/storetest"
 )
 

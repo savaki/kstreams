@@ -17,6 +17,7 @@ package boltstore
 
 import (
 	"bytes"
+	"io"
 	"os"
 	"path/filepath"
 	"sync"
@@ -117,7 +118,7 @@ func (s *Store) Get(key kstreams.Encoder) ([]byte, error) {
 }
 
 func (s *Store) doRange(from, to []byte, callback func(key, value []byte) error) error {
-	return s.db.View(func(txn *bolt.Tx) error {
+	err := s.db.View(func(txn *bolt.Tx) error {
 		bucket, err := s.fetchBucket(txn)
 		if err != nil {
 			return err
@@ -133,6 +134,14 @@ func (s *Store) doRange(from, to []byte, callback func(key, value []byte) error)
 
 		return nil
 	})
+
+	if err != nil {
+		if err != io.EOF {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // Range over a given set of keys, inclusive.  Range MUST NOT return
